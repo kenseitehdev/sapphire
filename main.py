@@ -143,7 +143,17 @@ class WhileNode(Node):
             self.thenBlock = b
             self.condition = d
             i = i + 1;
-
+class ForNode(Node):
+    def __init__(self, condition, thenBlock):
+        self.condition = condition
+        self.thenBlock = thenBlock
+      #  print("IfNode")
+    def evaluate(self):
+       # print("Evaluate IfNode")
+        return 0
+    def execute(self):
+        #print("Execute IfNode condition : " + str(self.condition))
+        print('node not working yet')
 class IfNode(Node):
     def __init__(self, c, t, e):
         self.condition = c
@@ -292,6 +302,7 @@ reserved = {
    'if' : 'IF',
    'else' : 'ELSE',
    'while' : 'WHILE',
+   'for' : 'FOR',
    'print' : 'PRINT',
    'or'   : 'OR',
    'and'  : 'AND',
@@ -333,6 +344,7 @@ tokens = (
    'PRINT',
    'IF',
    'WHILE',
+   'FOR',
    'ELSE'
 )
 
@@ -361,6 +373,7 @@ t_IN = r'in'
 t_SEMICOLON = r'\;'
 t_ASEQUAL = r'\='
 t_WHILE = r'while'
+t_FOR = r'for'
 t_LCURLY = r'\{'
 t_RCURLY = r'\}'
 t_IF = r'if'
@@ -501,6 +514,10 @@ def p_statement_while(p):
     '''statement : WHILE LPAREN expression RPAREN block'''
     #print p[3]
     p[0] = WhileNode(p[3], p[5])
+def p_statement_for(p):
+    '''statement : FOR LPAREN expression RPAREN block'''
+    print('forloop being worked on')
+    p[0] = ForNode(p[3],p[5])
 
 def p_statement_assign_array(p):
     '''statement : VARIABLE LBRACKET expression RBRACKET ASEQUAL expression SEMICOLON'''
