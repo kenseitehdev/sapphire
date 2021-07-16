@@ -1,0 +1,3 @@
+function random(){
+	print("this is the first random function");
+}

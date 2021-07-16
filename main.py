@@ -691,11 +691,16 @@ def p_empty(p):
 
 def p_error(p):
     if p:
-         print("Syntax error at token", p.type, p)
+        if '}' in str(p.value):
+            parser.errok()
+        else:
+
+            print("ERROR 001: Syntax error at '", str(p.value),"'line:",p.lineno," position:",str(p.lexpos))
+         
          # Just discard the token and tell the parser it's okay.
-         parser.errok()
+            parser.errok()
     else:
-         print("Syntax error at EOF")
+         print("ERROR 002: Syntax error at EOF")
 
 import ply.yacc as yacc
 parser = yacc.yacc()
@@ -704,12 +709,29 @@ parser = yacc.yacc()
 program=""
 while 'exit' not in program:
   program = input("Sapphire>>:")
+  
+  
+  while 'import' in program:
+    p_array=program.split()
+    loc=p_array.index('import')
+    try:
+        imported= open(p_array[loc+1]+".sap")
+    except:
+        imported= open('libraries/'+p_array[loc+1]+".sap")
+    file_str=imported.read()
+    imported.close()
+    p_array[loc+1]=""
+    updated = ' '.join(p_array)
+
+    rep=updated.replace("import ",file_str)
+    program=rep
+   
+  program='{'+program+'}'
   while ';' not in program:
     program2= input(">")
     program=program+program2
-  program='{'+program+'}'
   result = parser.parse(program)
 
 if 'exit' in program:
   sys.exit()
-#have to remove extra brackets before and after the code
+#finish forloops and imports
